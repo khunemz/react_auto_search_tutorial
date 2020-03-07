@@ -13,11 +13,13 @@ export default class AutoCompleteText extends Component {
         ];
         // initialize state
         this.state = {
-            suggestions: []
+            suggestions: [] , 
+            text: ''
         };
 
         this.onTextChanged = this.onTextChanged.bind(this);
         this.renderSuggestions = this.renderSuggestions.bind(this);
+        this.suggestionsSelected = this.suggestionsSelected.bind(this);
     }
 
     onTextChanged(e) {
@@ -32,7 +34,14 @@ export default class AutoCompleteText extends Component {
         }
 
         this.setState(()=>({
-            suggestions: suggestions
+            suggestions: suggestions , text: value
+        }));
+    }
+
+    suggestionsSelected (value) {
+        this.setState(()=> ({
+            text: value ,
+            suggestions: []
         }));
     }
 
@@ -44,18 +53,19 @@ export default class AutoCompleteText extends Component {
 
         return (
 
-            <ul>
-                {suggestions.map((item) => <li>{item}</li>)}
+            <ul className="list-group">
+                {suggestions.map((item) => <li className="list-group-item" onClick={()=> this.suggestionsSelected(item)}>{item}</li>)}
             </ul>
         );
     }
 
     render() {
+        const {text} = this.state;
         return (
             <div>
                 <h4>AutoCompleteText</h4>
                 <br />
-                <input type="text" name="name" 
+                <input className="form-control" value={text} type="text" name="name" 
                     onChange={this.onTextChanged} />
                 {this.renderSuggestions()}
             </div>
